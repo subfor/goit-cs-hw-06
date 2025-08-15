@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_container
+    restart: always
+    env_file: .env
+    volumes:
+      - ./app/html:/app/html
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    expose:
+      - "${SOCKET_PORT}"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:6
+    container_name: mongo_container
+    restart: always
+    env_file: .env
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
